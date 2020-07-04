@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lhz.schoolhelper.mapper.NoticeMapper">
+	<select id="getNoticeByClassid" resultType="NoticeDo">
+		SELECT
+		id,title,content,tid,classid,date
+		FROM
+		notice
+		WHERE
+		classid = #{classid}
+		ORDER BY
+		date
+		DESC
+		LIMIT
+		#{currentPage},5
+	</select>
+	<select id="getNoticeByTid" resultType="NoticeDo">
+		SELECT
+		id,title,content,tid,classid,date
+		FROM
+		notice
+		WHERE
+		tid = #{tid}
+		ORDER BY
+		date
+		DESC
+		LIMIT
+		#{currentPage},5
+	</select>
+	<insert id="addNotice" parameterType="NoticeDo">
+		INSERT INTO
+		notice
+		(title,content,tid,classid,date)
+		VALUES
+		(#{title},#{content},#{tid},#{classid},#{date})
+	</insert>
+</mapper>

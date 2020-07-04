@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lhz.schoolhelper.mapper.CommunicationMapper">
+
+	<select id="getAllOrderByDate" resultType="CommunicationDo">
+		SELECT
+		id,title,sid,date,hot
+		FROM
+		communication
+		ORDER BY
+		date
+		DESC
+		LIMIT
+		#{currentPage},5
+	</select>
+	<select id="getAllOrderByHot" resultType="CommunicationDo">
+		SELECT
+		id,title,sid,date,hot
+		FROM
+		communication
+		ORDER BY
+		hot
+		DESC
+		LIMIT
+		#{currentPage},5
+	</select>
+	<select id="getById" resultType="CommunicationDo">
+		SELECT
+		id,title,sid,date,hot,content
+		FROM
+		communication
+		WHERE
+		id = #{id}
+	</select>
+	
+	<insert id="addCommunication" parameterType="CommunicationDo">
+		INSERT INTO
+		communication
+		(title,content,sid,date,hot)
+		VALUES
+		(#{title},#{content},#{sid},#{date},#{hot})
+	</insert>
+	
+</mapper>

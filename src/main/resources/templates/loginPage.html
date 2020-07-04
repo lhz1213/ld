@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="include/header::header('欢迎使用')" ></head>
+<body background="/img/1f3e349c3ca6e60099386114d667a557.jpg">
+
+<div id="cc" class="container" style="position:absolute;top:20%;left:20%;background:#E0E0E0;">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="page-header">
+				<h1 align="center">欢迎使用</h1>
+			</div>
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					 <label for="username" class="col-sm-4 control-label" style="font-size: 18px">用户名</label>
+					<div class="col-sm-4">
+						<input type="text" v-model="user.name" class="form-control input-lg" id="username" placeholder="学号/教师编号"/>
+					</div>
+					<div class="errorDiv" style="display: none;">
+						<div class="errorMessage" style="font-size: 20px;color: red;"></div>
+					</div>
+				</div>
+				<div class="form-group">
+					 <label for="userpassword" class="col-sm-4 control-label" style="font-size: 18px">密码</label>
+					<div class="col-sm-4">
+						<input type="password" v-model="user.password" class="form-control input-lg" id="userpassword" placeholder="密码"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-1">
+						 <button type="button" v-on:click="login" class="btn btn-default">登陆</button>
+					</div>
+					<div class="col-sm-1">
+						 <a class="btn btn-default" href="/signup" role="button">注册</a>
+					</div>
+					<div class="col-sm-offset-1 col-sm-1">
+						<div class="checkbox">
+							 <label><input type="checkbox" />记住我</label>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	var vue=new Vue({
+		el:"#cc",
+		data:{
+			user:{name:'', password:'',id:''}
+		},
+		methods:{
+			login:function(){				
+	            if(5==this.user.name.length){
+	            	$("div.errorDiv").css("display","none");
+	                this.user.id=0;
+	            }else if(3==this.user.name.length){
+	            	$("div.errorDiv").css("display","none");
+	                this.user.id=1;
+	            }else{
+	            	$("div.errorMessage").html("请输入正确用户名");
+	                $("div.errorDiv").css("display","block");
+	                return;
+	            }
+	            axios.post("userlogin",this.user).then(function(response) {
+	                if(response.data.code==200){
+	                    if(response.data.msg=="学生"){
+	                    	location.href="/student/curriculum";
+	                    }
+	                    if(response.data.msg=="老师"){
+	                    	location.href="/teacher/tcurriculum";
+	                    }
+	                }
+	                else{
+	                  	alert(response.data.msg);
+	                }
+	            });
+			}
+		}
+	});
+</script>
+
+
+</body>
+</html>

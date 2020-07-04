@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/include/header::header('校园动态')" ></head>
+<body>
+<div class="container-fluid" id="cc">
+
+	<div th:replace="/main/student/studentinfo"></div>
+	<br>
+	<div class="row clearfix">
+		<div th:replace="/main/student/studentmenu"></div>
+		
+		<div class="col-md-8 column">
+			<div v-for="com in comlist" style="border-width: 10px;border-style:solid;border-color: white;">
+				<div style="position:relative; font-size: 25px;text-align:center;background-color: #EEEEE0;display:inline-block;width: 40px">
+					{{com.hot}}
+				</div>
+				<div style="position:relative;margin-left: 30px;font-size: 25px;display:inline-block;">
+					<a :href="'/detailed/'+com.id">{{com.title}}</a>
+				</div>
+				<div style="float: right;font-size: 25px;display:inline-block;">
+					{{com.dateString}}
+				</div>
+				<div style="float: right;margin-right:30px;  font-size: 25px;display:inline-block;">
+					{{com.sname}}
+				</div>
+			</div>
+			<div>{{msg}}</div>
+			<div class="col-md-4 column">
+				<ul class="pagination">
+					<li>
+					 	<a href="#" @click="load(-1)">Prev</a>
+					</li>
+					<li>
+					 	<a href="#" @click="load(0)">{{currentPage+1}}</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(1)">{{currentPage+2}}</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(2)">{{currentPage+3}}</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(1)">Next</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-4 column col-md-offset-4">
+				<ul class="pagination">
+					<li>
+					 	<a href="#" @click="order('hot')">热门</a>
+					</li>
+					<li>
+					 	<a href="#" @click="order('date')">时间</a>
+					</li>					
+				</ul>
+			</div>
+			
+			<div style="position: relative;margin-top: 200px;border-top-width: 1px;border-top-style: solid;">
+				<br>
+				<br>
+				<br>
+				<form>
+					<div class="form-group">
+		    			<label for="titlename">标题</label>
+		    			<input type="text" class="form-control" id="titlename" placeholder="请输入标题" v-model="tie.title">
+		  			</div>
+					<div class="form-group">
+		    			<label for="33">内容</label>
+		    			<textarea rows="10" class="form-control" id="33" placeholder="请输入内容" v-model="tie.content"></textarea>
+		  			</div>
+		  			<button type="button" class="btn btn-info btn-default" @click="fatie()">发表</button>
+	  			</form>
+  			</div>
+			
+		</div>
+				
+	</div>
+</div>
+
+
+
+
+<script>
+	
+	 var vue=new Vue({
+		el:"#cc",
+		data:{
+			code:'',
+			comlist:null,
+			msg:'',
+			currentPage:0,
+			orderRule:'date',
+			tie:{title:'',content:''}
+		},
+		mounted:function(){
+			this.load(0);
+		},
+		methods:{
+			load:function(i){
+				this.currentPage=this.currentPage+i;
+				this.msg='';
+				this.comlist=null;
+				axios.get("/schoolpost/"+this.currentPage+"?orderRule="+this.orderRule).then(function(response){					
+					vue.code=response.data.code;
+					if(vue.code==200){
+						vue.comlist=response.data.model;
+					}else{
+						vue.msg=response.data.msg;
+					}
+					
+				});
+			},
+			order:function(order){
+				this.orderRule=order;
+				this.currentPage=0;
+				this.load(0)
+			},
+			fatie:function(){
+				axios.post("/fatie",this.tie).then(function(response){
+					vue.orderRule='date';
+					vue.currentPage=0;
+					vue.tie={title:'',content:''};
+					vue.load(0);
+				});
+			}
+		}
+	}); 
+</script>
+
+</body>
+</html>

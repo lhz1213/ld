@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lhz.schoolhelper.mapper.StudentMapper">
+	<select id="getStudentById" resultType="StudentDo">
+		SELECT
+		id,name,identifer,password,role,classid
+		FROM
+		student
+		WHERE
+		id = #{id}
+	</select>
+	
+	<select id="getStudentByIdentiferAndPassword" resultType="StudentDo">
+		SELECT
+		id,name,identifer,password,role,classid
+		FROM
+		student
+		WHERE
+		identifer = #{identifer}
+		AND
+		password = #{password}
+	</select>
+	
+	<select id="getStudentByIdentifer" resultType="StudentDo">
+		SELECT
+		id,name,identifer,password,role,classid
+		FROM
+		student
+		WHERE
+		identifer = #{identifer}
+	</select>
+	
+	<insert id="addStudent" parameterType="StudentDo">
+		INSERT INTO
+		student
+		(name,identifer,password,role,classid)
+		VALUES
+		(#{name},#{identifer},#{password},#{role},#{classid})
+	</insert>
+</mapper>

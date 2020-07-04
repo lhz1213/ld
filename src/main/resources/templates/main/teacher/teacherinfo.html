@@ -1,0 +1,13 @@
+<div class="row clearfix" th:fragment="teacherinfo">
+	<div class="col-md-12 column" style="background-color: #BFEFFF;">
+		<div style="height: 100px;width: 100px;text-align: center;"  class="col-md-1 column" >
+		<img alt="" src="/img/b8389b504fc2d56285e6982dee1190ef77c66c07.jpg" height="80px" width="80px">
+		头像
+		</div>
+		<div th:if="null!=${session.teacherVo}" class="col-md-offset-1 col-md-10 column">
+			<span th:text="${session.teacherVo.name}" style="font-size: 50px"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			<span th:text="${session.teacherVo.identifer}" style="font-size: 40px"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+			<span th:text="${session.teacherVo.contact}" style="font-size: 30px"></span>
+		</div>
+	</div>
+</div>

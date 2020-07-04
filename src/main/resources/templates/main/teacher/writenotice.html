@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/include/header::header('班级通知')" ></head>
+<body>
+<div class="container-fluid" id="cc">
+
+	<div th:replace="/main/teacher/teacherinfo"></div>
+	<br>
+	<div class="row clearfix">
+		<div th:replace="/main/teacher/teachermenu"></div>
+		
+		<div class="col-md-offset-1 col-md-9 column">
+			<div class="jumbotron well" v-for="notice in noticelist">
+				<h1>{{notice.title}}</h1>
+				<br>
+				<p>{{notice.content}}</p>
+				<br><br>
+				<p align="right">
+					 班级：{{notice.classid}}<br>
+					 发布日期：{{notice.dateString}}
+				</p>
+			</div>
+			<div>{{msg}}</div>
+			
+		</div>
+		<div class="col-md-offset-5 col-md-5 column">
+				<ul class="pagination">
+					<li>
+						 <a href="#" @click="load(-1)">Prev</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(0)">{{currentPage+1}}</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(1)">{{currentPage+2}}</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(2)">{{currentPage+3}}</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(1)">Next</a>
+					</li>
+				</ul>
+		</div>
+		
+		<div class="col-md-offset-1 col-md-9 column">
+				<br>
+				<br>
+				<form class="form-horizontal" role="form">
+				<div class="form-group" >
+					 <label for="coursename" class="col-sm-2 control-label">标题</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" id="coursename" v-model="notice.title"/>
+					</div>
+					<label for="classid1" class="col-sm-2 control-label">班级编号</label>
+					<div class="col-sm-3">
+						<input type="text" class="form-control" id="classid1" v-model="notice.classid"/>
+					</div>
+				</div>
+				<div class="form-group">
+		    			<label for="33" class="col-sm-2 control-label">内容</label>
+		    			<div class="col-sm-8">
+		    			<textarea rows="10" class="form-control" id="33" placeholder="请输入内容" v-model="notice.content"></textarea>
+		  				</div>
+		  		</div>
+		  		<div class="col-md-offset-9">
+		  		<button type="button" class="btn btn-info btn-default" @click="announce()">发表</button>
+				</div>
+			</form>
+		</div>		
+	</div>
+</div>
+
+
+
+
+<script>
+	var vue=new Vue({
+		el:"#cc",
+		data:{
+			code:'',
+			noticelist:null,
+			msg:'',
+			currentPage:0,
+			notice:{title:'',content:'',classid:''}
+		},
+		mounted:function(){
+			this.load(0);
+		},
+		methods:{
+			load:function(i){
+				this.currentPage=this.currentPage+i;
+				this.noticelist=null;
+				this.msg='';
+				axios.get("/teachernotice/"+this.currentPage).then(function(response){					
+					vue.code=response.data.code;
+					
+					if(vue.code==200){
+						vue.noticelist=response.data.model;
+					}else{
+						vue.msg=response.data.msg;
+					}
+					
+				});
+			},
+			announce:function(){
+				axios.post("/announcement",this.notice).then(function(response){
+					vue.load(0);
+				});
+			}
+		}
+	});
+</script>
+
+</body>
+</html>

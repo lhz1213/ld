@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/include/header::header('校园动态')" ></head>
+<body>
+<div class="container-fluid" id="cc">
+
+	<div th:replace="/main/student/studentinfo"></div>
+	<br>
+	<div class="row clearfix">
+		<div th:replace="/main/student/studentmenu"></div>
+		
+		<div class="col-md-offset-1 col-md-9 column">
+		
+			<div style="border-bottom: thin;border-bottom-color: black;border-bottom-style: solid;font-size: 30px">
+				{{title}}
+				 <button type="button" class="btn btn-default" style="float: right;">只看楼主</button>
+				 <button type="button" class="btn btn-default" style="float: right;margin-right: 20px">回复</button>
+			</div>
+			<div style="border-bottom-color: #EEEEE0;border-bottom-style: solid;" v-for="(b,index) in body" v-if="index>currentPage-1 && index<currentPage+5">
+				<div style="background-color: #F0F0F0;height: 400px;text-align: center;width: 150px;display: inline-block;font-size: 20px;">
+				<br>
+				<img src="/img/535dda84ec8398618e3cd03c8b75ccae.jpg" height="100px" width="130px" >
+				<br>
+				<br>
+				{{b.sname}}
+				</div>
+				<div style="display: inline-block;width: 1000px;">
+					<div style="font-size: 25px;margin-left: 30px;">
+						{{b.content}}						
+					</div>
+					<br>
+					<br>
+					<br>
+					<div style="float: right;margin-top: 150px">
+						{{index+1}}楼——{{b.dateString}}
+					</div>
+				</div>
+			</div>									
+			<div>{{msg}}</div>	
+		</div>
+		
+		<div class="col-md-offset-5 col-md-5 column">
+				<ul class="pagination">
+					<li>
+						 <a href="#" @click="load(-1)">Prev</a>
+					</li>
+					<li v-for="i in after">
+						 <a href="#" @click="load(i)">{{currentPage+1}}</a>
+					</li>
+					<li>
+						 <a href="#" @click="load(1)">Next</a>
+					</li>
+				</ul>
+		</div>
+			
+		<div class="col-md-offset-3 col-md-7 column" style="border-top-width: 1px;border-top-style: solid">
+		<br>
+		<br>
+			<form>
+					<div class="form-group">
+		    			<label for="33">回复</label>
+		    			<textarea rows="10" class="form-control" id="33" placeholder="请输入内容" v-model="reply.content"></textarea>
+		  			</div>
+		  			<button type="button" class="btn btn-info btn-default" @click="replyy()">发表</button>
+	  		</form>
+		</div>	
+	</div>
+</div>
+
+<script>
+
+	var vue=new Vue({
+		el:"#cc",
+		data:{
+			code:'',
+			msg:'',
+			currentPage:0,
+			list:null,
+			index:'',
+			str:'',
+			totalPage:'',
+			after:'',
+			title:'',
+			body:null,
+			content:'',
+			reply:{comid:'',content:''}
+			
+		},
+		mounted:function(){
+			//this.load(0);
+			this.str=window.location.href;
+			this.index=this.str.lastIndexOf("\/");  
+			this.reply.comid=this.str.substring(this.index + 1, this.str.length);
+			this.currentPage=0;
+			this.getAll()
+		},
+		methods:{
+			getAll:function(){				
+				axios.get("/detailedpost/"+"?comid="+this.reply.comid).then(function(response){					
+					vue.code=response.data.code;
+					if(vue.code==200){
+						vue.list=response.data.model;
+						vue.totalPage=vue.list.totalPage;
+						vue.title=vue.list.title;
+						vue.body=vue.list.body;
+						vue.after=vue.totalPage-vue.currentPage
+					}else{
+						vue.msg=response.data.msg;
+					}
+					
+				});
+			},
+			load:function(i){
+				i=i-1;
+				if(this.currentPage+i<this.totalPage && this.currentPage+i>-1){
+					
+				this.currentPage=this.currentPage+i;
+				this.after=this.totalPage-this.currentPage
+				}
+			},
+			replyy:function(){
+				axios.post("/reply",this.reply).then(function(response){
+					vue.currentPage=0;
+					vue.reply.content='';
+					vue.getAll()
+				});
+			}
+		}
+	}); 
+</script>
+</body>
+
+
+
+</html>

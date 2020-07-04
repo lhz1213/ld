@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="include/header::header('学生注册')" ></head>
+<body>
+
+<div id="cc" class="container" style="position:absolute;top:20%;left:20%;background:#E0E0E0;">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="page-header">
+				<h1 align="center">请填写学生信息</h1>
+			</div>
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					 <label for="yourname" class="col-sm-4 control-label" style="font-size: 18px">学号</label>
+					<div class="col-sm-4">
+						<input type="text" v-model="student.identifer" class="form-control input-lg" id="yourname" placeholder="学号"/>
+					</div>
+					<div class="errorDiv" style="display: none;">
+						<div class="errorMessage" style="font-size: 20px;color: red;"></div>
+					</div>
+				</div>
+				<div class="form-group">
+					 <label for="youridentifer" class="col-sm-4 control-label" style="font-size: 18px">姓名</label>
+					<div class="col-sm-4">
+						<input type="text" v-model="student.name" class="form-control input-lg" id="youridentifer" placeholder="姓名"/>
+					</div>
+				</div>
+				<div class="form-group">
+					 <label for="yourclass" class="col-sm-4 control-label" style="font-size: 18px">班级编号</label>
+					<div class="col-sm-4">
+						<input type="text" v-model="student.classid" class="form-control input-lg" id="yourclass" placeholder="班级编号"/>
+					</div>
+				</div>
+				<div class="form-group">
+					 <label for="yourpassword" class="col-sm-4 control-label" style="font-size: 18px">密码</label>
+					<div class="col-sm-4">
+						<input type="password" v-model="student.password" class="form-control input-lg" id="yourpassword" placeholder="密码"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-4 col-sm-1">
+						 <button type="button" v-on:click="register" class="btn btn-default">确定</button>
+					</div>
+					<div class="col-sm-offset-2 col-sm-1">
+						 <a class="btn btn-default" href="/home" role="button">返回</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	var vue=new Vue({
+		el:"#cc",
+		data:{
+			student:{name:'', password:'',identifer:'',role:'学生',classid:''}
+		},
+		methods:{
+			register:function(){				
+	            if(5==this.student.identifer.length){
+	            	$("div.errorDiv").css("display","none");
+	            }else{
+	            	$("div.errorMessage").html("请输入正确学号");
+	                $("div.errorDiv").css("display","block");
+	                return;
+	            }
+	            
+	            axios.post("/studentregister",this.student).then(function(response) {
+	                if(response.data.code==200){
+	                	location.href="home";
+	                }
+	                else{
+	                  	alert(response.data.msg);
+	                }
+	            });
+			}
+		}
+	});
+</script>
+
+
+</body>
+</html>

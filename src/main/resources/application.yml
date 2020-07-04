@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/schoolhelper?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 651025
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    
+        
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+    
+mybatis:
+  type-aliases-package: lhz.schoolhelper.model.domain      
+  mapper-locations: classpath:mapping/*Mapper.xml
+  
+logging:
+  level:
+    lhz:
+      schoolhelper:
+        mapper: DEBUG
+    

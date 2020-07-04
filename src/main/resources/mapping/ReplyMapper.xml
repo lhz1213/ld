@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lhz.schoolhelper.mapper.ReplyMapper">
+	<select id="getAllByComid" resultType="ReplyDo">
+		SELECT
+		id,content,sid,date,comid
+		FROM
+		reply
+		WHERE
+		comid = #{comid}
+	</select>
+	
+	<insert id="addReply" parameterType="ReplyDo">
+		INSERT INTO
+		reply
+		(content,sid,date,comid)
+		VALUES
+		(#{content},#{sid},#{date},#{comid})
+	</insert>
+</mapper>

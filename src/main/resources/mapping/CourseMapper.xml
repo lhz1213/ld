@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lhz.schoolhelper.mapper.CourseMapper">
+
+	<select id="getCourseByClassid" resultType="CourseDo">
+		SELECT
+		id,name,day,period,locate,tid,classid,info
+		FROM
+		course
+		WHERE
+		classid = #{classid}
+	</select>
+	<select id="getCourseByTid" resultType="CourseDo">
+		SELECT
+		id,name,day,period,locate,tid,classid,info
+		FROM
+		course
+		WHERE
+		tid = #{tid}
+	</select>
+	<select id="getCourseByDayAndPeriodAndTid" resultType="CourseDo">
+		SELECT
+		id,name,day,period,locate,tid,classid,info
+		FROM
+		course
+		WHERE
+		day = #{day}
+		AND
+		period = #{period}
+		AND
+		tid = #{tid}
+	</select>
+	
+	<insert id="addCourse" parameterType="CourseDo">
+		INSERT INTO
+		course
+		(name,day,period,locate,tid,classid,info)
+		VALUES
+		(#{name},#{day},#{period},#{locate},#{tid},#{classid},#{info})
+	</insert>
+	
+	<update id="updateCourse" parameterType="CourseDo">
+		UPDATE
+		course
+		SET
+		name = #{name},locate = #{locate},classid = #{classid},info = #{info}
+		WHERE
+		day = #{day}
+		AND
+		period = #{period}
+		AND
+		tid = #{tid}
+	</update>
+
+</mapper>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/include/header::header('课程表')" ></head>
+<body>
+<div class="container-fluid" id="cc">
+
+	<div th:replace="/main/student/studentinfo"></div>
+	<br>
+	<div class="row clearfix">
+		<div th:replace="/main/student/studentmenu"></div>
+		
+		<div class="col-md-10 column">
+			<div class="page-header">
+				<h1 align="center">
+					20xx-20xx学年-第X学期 &nbsp;<small>起止时间：XXXX-XXXX</small>
+				</h1>
+			</div>
+			
+			<table class="table table-bordered table-hover table-striped">
+				<thead>
+					<tr>
+						<th>星期一</th>
+						<th>星期二</th>
+						<th>星期三</th>
+						<th>星期四</th>
+						<th>星期五</th>
+						<th>星期六</th>
+						<th>星期日</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="listcourse in listcourses">
+						<td v-for="course in listcourse" align="center" style="font-size: 18px;">
+							{{course.name}}<br>
+							{{course.locate}}<br>
+							{{course.teacherName}}<br>							
+							{{course.info}}<br>							
+						</td>
+					</tr>
+					<div>{{msg}}</div>
+				</tbody>
+			</table>
+		</div>		
+	</div>
+</div>
+
+
+
+
+<script>
+	
+	var vue=new Vue({
+		el:"#cc",
+		data:{
+			code:'',
+			listcourses:null,
+			msg:''
+		},
+		mounted:function(){
+			this.load();
+		},
+		methods:{
+			load:function(){
+				axios.get("/mycurriculum").then(function(response){					
+					vue.code=response.data.code;
+					if(vue.code==200){
+						vue.listcourses=response.data.model;
+					}else{
+						vue.msg=response.data.msg;
+					}
+					
+				});
+			}
+		}
+	});
+</script>
+
+</body>
+</html>
